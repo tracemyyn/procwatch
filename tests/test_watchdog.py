@@ -81,6 +81,15 @@ def test_last_ok_at_updated_when_not_stale():
     assert wd.last_ok_at >= original
 
 
+def test_last_ok_at_not_updated_when_stale():
+    """last_ok_at should remain unchanged when the watchdog is stale."""
+    wd = init_watchdog(interval_seconds=1.0, stale_factor=1.0)
+    original = wd.last_ok_at
+    far_future = time.time() + 500.0
+    check_stale(now=far_future)
+    assert wd.last_ok_at == original
+
+
 def test_stale_summary_not_initialised():
     summary = stale_summary()
     assert "not initialised" in summary
